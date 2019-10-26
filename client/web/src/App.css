@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  color: #9AC4F8;
+  position: absolute;
+  top: 2rem;
+  left: 5rem;
+  font-size: 3rem;
+  height: 1.1rem;
+  font-family: 'Oxygen';
+}
+
+.App-header {
+  background-color: #2E282A;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.contain {
+    width: 60rem;
+    height: 30rem;
+}
