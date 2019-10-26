@@ -21,7 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     ts = req.params.get('ts')
     value = req.params.get('value')
 
-    components = req.get_json()
+    # components = req.get_json()
 
     new_es = Entity()
     new_es.PartitionKey = "1"
@@ -29,7 +29,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     new_es.pid = pid
     new_es.ts = ts
     new_es.value = value
-    new_es.components = components
+    # new_es.components = components
 
     etag = table.insert_entity(table_name, new_es)
 
