@@ -1,0 +1,1 @@
+cognitive_face==1.4.2
