@@ -61,7 +61,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     neutral = response.json()[0]['faceAttributes']['emotion']['neutral']
     sadness = response.json()[0]['faceAttributes']['emotion']['sadness']
 
-    ts = datetime.timestamp()
+    now = datetime.now()
+    ts = datetime.timestamp(now)
 
 
     def send_image(imgbytes):
@@ -93,7 +94,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return hap + .5 * neu - sad - .5 * fea - .5 * con - .5 * ang
 
     value = es(anger, contempt, fear, happiness, neutral, sadness)
-    logging.info("es: " + value)
+    logging.info("es: " + str(value))
 
     params = {
         "ts": ts,
