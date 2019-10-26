@@ -1,1 +1,2 @@
 cognitive_face==1.4.2
+requests==2.22.0
