@@ -84,10 +84,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             block_blob_service.create_blob_from_bytes(container_name,
                                                       blob_name, imgbytes)
             # List the blobs in the container
-            logging.info("\nList blobs in the container")
-            generator = block_blob_service.list_blobs(container_name)
-            for blob in generator:
-                logging.info("\t Blob name: " + blob.name)
+            # logging.info("\nList blobs in the container")
+            # generator = block_blob_service.list_blobs(container_name)
+            # for blob in generator:
+            #     logging.info("\t Blob name: " + blob.name)
 
         except Exception as e:
             logging.info(e)
