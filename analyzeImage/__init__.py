@@ -141,12 +141,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         block_blob_service.create_container(container_name)
         blob_name = str(timestamp)
         # Set the permission so the blobs are public.
-        block_blob_service.set_container_acl(
-            container_name, public_access=PublicAccess.Container)
+        # block_blob_service.set_container_acl( container_name, public_access=PublicAccess.Container)
 
         # Upload the created file, use local_file_name for the blob name
-        block_blob_service.create_blob_from_bytes(container_name, blob_name,
-                                                  image)
+        block_blob_service.create_blob_from_bytes(container_name, blob_name, body_content)
         # List the blobs in the container
         # logging.info("\nList blobs in the container")
         # generator = block_blob_service.list_blobs(container_name)
