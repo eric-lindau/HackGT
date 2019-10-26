@@ -4,9 +4,10 @@ import './App.css';
 
 function generateData() {
   return [{
+    "id": "ES",
     "data": [...Array(11).keys()].map(e => 
       ({
-        "x": e,
+        "x": e + 1,
         "y": Math.random()
       })
     )
@@ -14,7 +15,7 @@ function generateData() {
 }
 
 function App() {
-  const [dat, setDat] = useState(generateData())
+  const [data, setData] = useState(generateData())
 
   return (
     <div className="App">
@@ -24,8 +25,8 @@ function App() {
         </div>
         <div class="contain">
             <ResponsiveLine
-              onClick={() => {setDat(generateData())}}
-              data={dat}
+              onClick={() => {setData(generateData())}}
+              data={data}
               margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
               xScale={{ type: 'point' }}
               yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
@@ -36,7 +37,7 @@ function App() {
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: 'transportation',
+                  legend: 'Time',
                   legendOffset: 36,
                   legendPosition: 'middle'
               }}
@@ -45,12 +46,13 @@ function App() {
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: 'count',
+                  legend: 'Emotion Scores',
                   legendOffset: -40,
-                  legendPosition: 'middle'
+                  legendPosition: 'middle',
+                  textColor: 'white'
               }}
               enableGridX={false}
-              enableGridY={false}
+              enableGridY={true}
               colors={{ scheme: 'pastel2' }}
               pointSize={10}
               pointColor={{ theme: 'background' }}
@@ -65,6 +67,41 @@ function App() {
                     text: {
                       fill: 'white'
                     }
+                  },
+                  legend: {
+                    text: {
+                      fill: 'white',
+                      fontSize: 12
+                    }
+                  }
+                },
+                legends: {
+                  text: {
+                    fill: 'red'
+                  }
+                },
+                crosshair: {
+                  line: {
+                    stroke: 'white',
+                    strokeWidth: 1,
+                    strokeOpacity: 0.75,
+                    strokeDasharray: '6 6'
+                  }
+                },
+                grid: {
+                  line: {
+                    stroke: 'rgba(255, 255, 255, 0.3)',
+                    strokeWidth: 1
+                  }
+                },
+                legends: {
+                  text: {
+                    fill: 'white'
+                  }
+                },
+                annotations: {
+                  text: {
+                    color: 'white'
                   }
                 },
                 tooltip: {
