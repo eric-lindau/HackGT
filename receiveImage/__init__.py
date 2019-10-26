@@ -16,6 +16,7 @@ def receive_image(ppid, pts):
 
     except Exception as e:
         logging.info(e)
+        return func.HttpResponse(status_code=500)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
