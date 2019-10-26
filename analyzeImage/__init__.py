@@ -23,6 +23,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     pid = req.params.get("pid")
+    
 
     headers = {'Ocp-Apim-Subscription-Key': face_api_key}
     headers_disk = {
@@ -60,6 +61,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     neutral = response.json()[0]['faceAttributes']['emotion']['neutral']
     sadness = response.json()[0]['faceAttributes']['emotion']['sadness']
 
+    ts = datetime.timestamp()
+
+
     def send_image(imgbytes):
         try:
             # Create the BlockBlockService that is used to call the Blob service for the storage account
@@ -69,13 +73,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # Create a container called 'imageblobs'.
             container_name = 'imageblobs'
             block_blob_service.create_container(container_name)
-
+            blob_name = str(pid) + "-" + str(ts)
             # Set the permission so the blobs are public.
             block_blob_service.set_container_acl(container_name, public_access=PublicAccess.Container)
 
 
             # Upload the created file, use local_file_name for the blob name
-            block_blob_service.create_blob_from_bytes(container_name, imgbytes)
+            block_blob_service.create_blob_from_bytes(container_name, blob_name, imgbytes)
             # List the blobs in the container
             logging.info("\nList blobs in the container")
             generator = block_blob_service.list_blobs(container_name)
@@ -90,7 +94,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     value = es(anger, contempt, fear, happiness, neutral, sadness)
     logging.info("es: " + value)
-    ts = datetime.timestamp()
 
     params = {
         "ts": ts,
