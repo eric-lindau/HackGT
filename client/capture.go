@@ -32,6 +32,8 @@ func main() {
     uuid := "1"  // TODO: Un-hard-code
     println(uuid)
 
+    client := &http.Client{Timeout: 10 * time.Second}
+
     // Continuously beam up images
     for {
         time.Sleep(3100 * time.Millisecond) // Fine as camera needs time to warm up
@@ -57,14 +59,14 @@ func main() {
 
         // TODO: If problematic, switch to image/jpg
         // POST image
-        resp, err := http.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
+        resp, err := client.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
         if err != nil {
             log.Printf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
             continue
         } else if resp.StatusCode != 200 {
             log.Printf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
             continue
-        } else {
+        } else if resp.StatusCode == 200 {
             log.Printf("Image sent successfully\n")
         }
     }
