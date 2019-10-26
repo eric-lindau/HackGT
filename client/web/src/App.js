@@ -37,7 +37,7 @@ function App() {
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: 'transportation',
+                  legend: 'Time',
                   legendOffset: 36,
                   legendPosition: 'middle'
               }}
@@ -46,12 +46,13 @@ function App() {
                   tickSize: 5,
                   tickPadding: 5,
                   tickRotation: 0,
-                  legend: 'count',
+                  legend: 'Emotion Scores',
                   legendOffset: -40,
-                  legendPosition: 'middle'
+                  legendPosition: 'middle',
+                  textColor: 'white'
               }}
               enableGridX={false}
-              enableGridY={false}
+              enableGridY={true}
               colors={{ scheme: 'pastel2' }}
               pointSize={10}
               pointColor={{ theme: 'background' }}
@@ -66,6 +67,41 @@ function App() {
                     text: {
                       fill: 'white'
                     }
+                  },
+                  legend: {
+                    text: {
+                      fill: 'white',
+                      fontSize: 12
+                    }
+                  }
+                },
+                legends: {
+                  text: {
+                    fill: 'red'
+                  }
+                },
+                crosshair: {
+                  line: {
+                    stroke: 'white',
+                    strokeWidth: 1,
+                    strokeOpacity: 0.75,
+                    strokeDasharray: '6 6'
+                  }
+                },
+                grid: {
+                  line: {
+                    stroke: 'rgba(255, 255, 255, 0.3)',
+                    strokeWidth: 1
+                  }
+                },
+                legends: {
+                  text: {
+                    fill: 'white'
+                  }
+                },
+                annotations: {
+                  text: {
+                    color: 'white'
                   }
                 },
                 tooltip: {
