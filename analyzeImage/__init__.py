@@ -1,4 +1,5 @@
 import os, uuid, sys
+import io
 from datetime import datetime
 import azure.functions as func
 import requests
@@ -71,7 +72,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # response = requests.post(face_api_url, params=params,
     #                         headers=headers, json={"url": image_url})
 
-    image = req.get_body()
+    body_content = req.get_body()
+    image = io.StringIO(body_content)
 
     attributes = (
         'age,gender,headPose,smile,facialHair,glasses,emotion,hair,'
