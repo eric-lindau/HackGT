@@ -3,6 +3,8 @@ import json
 import logging
 import azure.functions as func
 import datetime
+import os, uuid, sys
+from azure.storage.blob import BlockBlobService, PublicAccess
 
 config = {
     "face-api": {
@@ -58,6 +60,31 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     neutral = response.json()[0]['faceAttributes']['emotion']['neutral']
     sadness = response.json()[0]['faceAttributes']['emotion']['sadness']
 
+    def send_image(imgbytes):
+        try:
+            # Create the BlockBlockService that is used to call the Blob service for the storage account
+            block_blob_service = BlockBlobService(account_name='hackgt19',
+                                                  account_key='24wGa1RHd0BnemSDBbqRzvvTAB7Qy4IAN28E9de6OLR98wxnFljJXnKaBtzqJd2F53SmtNZP2NnZCPZkeL6wlQ==')
+
+            # Create a container called 'imageblobs'.
+            container_name = 'imageblobs'
+            block_blob_service.create_container(container_name)
+
+            # Set the permission so the blobs are public.
+            block_blob_service.set_container_acl(container_name, public_access=PublicAccess.Container)
+
+
+            # Upload the created file, use local_file_name for the blob name
+            block_blob_service.create_blob_from_bytes(container_name, imgbytes)
+            # List the blobs in the container
+            logging.info("\nList blobs in the container")
+            generator = block_blob_service.list_blobs(container_name)
+            for blob in generator:
+                logging.info("\t Blob name: " + blob.name)
+
+        except Exception as e:
+            logging.info(e)
+    send_image(req.body)
     def es(ang, con, fea, hap, neu, sad):
         return hap + .5 * neu - sad - .5 * fea - .5 * con - .5 * ang
 

@@ -2,7 +2,14 @@ import React, { useState} from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import './App.css';
 
+DB_ENDPOINT = ''
+
+function getData() {
+  return await fetch(`${DB_ENDPOINT}?`)
+}
+
 function generateData() {
+  data = getData()
   return [{
     "id": "ES",
     "data": [...Array(11).keys()].map(e => 

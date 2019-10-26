@@ -7,11 +7,12 @@ import (
     "time"
 
 	"gocv.io/x/gocv"
+    "github.com/google/uuid"
 )
 
 const (
     ID = "0"
-    API = "http://localhost"
+    API = ""
     TEMP = ".temp-capture.jpg"
 )
 
@@ -28,6 +29,8 @@ func main() {
 	img := gocv.NewMat()
 	defer img.Close()
 
+    uuid := uuid.New().String()
+    print(uuid)
 
     // Continuously beam up images
     for {
@@ -51,7 +54,7 @@ func main() {
 
         // TODO: If problematic, switch to image/jpg
         // POST image
-        resp, err := http.Post(API, "application/octet-stream", file)
+        resp, err := http.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
         if err != nil {
             fmt.Printf("Could not POST image file successfully: %v\n", err.Error())
         } else if resp.StatusCode != 200 {
