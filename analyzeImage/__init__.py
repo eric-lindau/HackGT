@@ -128,7 +128,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if response.status_code == 200:
             logging.info("Upload Successful")
         else:
-            logging.error("Error: {}".format(response.json()))
+            logging.error("Error: {}".format(str(response)))
 
     logging.info("Uploading Image to 'imageblobs' Blob")
     try:
