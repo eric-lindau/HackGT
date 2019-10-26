@@ -51,7 +51,7 @@ func main() {
 
         // TODO: If problematic, switch to image/jpg
         // POST image
-        resp, err := http.Post(API, "image/jpeg", file)
+        resp, err := http.Post(API, "application/octet-stream", file)
         if err != nil {
             fmt.Printf("Could not POST image file successfully: %v\n", err.Error())
         } else if resp.StatusCode != 200 {
