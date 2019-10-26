@@ -5,6 +5,7 @@ import (
     "os"
     "net/http"
     "time"
+    "log"
 
 	"gocv.io/x/gocv"
     //"github.com/google/uuid"
@@ -57,11 +58,13 @@ func main() {
         // POST image
         resp, err := http.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
         if err != nil {
-            fmt.Printf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
+            log.Fatalf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
         } else if resp.StatusCode != 200 {
-            fmt.Printf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
+            log.Fatalf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
+        } else {
+            log.Printf("Image sent successfully\n")
         }
 
-        time.Sleep(3 * time.Second)
+        time.Sleep(1 * time.Second)
     }
 }
