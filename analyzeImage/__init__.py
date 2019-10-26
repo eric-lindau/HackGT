@@ -123,7 +123,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info("Uploading Face Data to 'insertEScore' Function")
         response = requests.post(
             "https://swagv1.azurewebsites.net/api/insertEScore",
-            data=face,
+            data=face.json(),
             params=params)
         if response.status_code == 200:
             logging.info("Upload Successful")
@@ -144,7 +144,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # block_blob_service.set_container_acl( container_name, public_access=PublicAccess.Container)
 
         # Upload the created file, use local_file_name for the blob name
-        block_blob_service.create_blob_from_bytes(container_name, blob_name, body_content)
+        block_blob_service.create_blob_from_bytes(container_name, blob_name,
+                                                  body_content)
         # List the blobs in the container
         # logging.info("\nList blobs in the container")
         # generator = block_blob_service.list_blobs(container_name)
