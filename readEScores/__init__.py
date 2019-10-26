@@ -36,7 +36,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             }
             escores.append(escore)
 
+        headers = {"Access-Control-Allow-Origin": "*"}
+
         # return func.HttpResponse(json.dumps(person), status_code=200)
-        return func.HttpResponse(json.dumps(escores), status_code=200)
+        return func.HttpResponse(json.dumps(escores),
+                                 status_code=200,
+                                 headers=headers)
     else:
         return func.HttpResponse("kys", status_code=400)
