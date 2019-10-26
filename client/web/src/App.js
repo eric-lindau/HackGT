@@ -5,17 +5,24 @@ import './App.css';
 DB_ENDPOINT = ''
 
 function getData() {
-  return await fetch(`${DB_ENDPOINT}?`)
+  res = await fetch(`${DB_ENDPOINT}?`)
+  if (res.statusCode != 200) {
+    console.log("BAD DATA")
+    console.log(res)
+    return []
+  }
+  data = res.json()
+  return data
 }
 
 function generateData() {
   data = getData()
   return [{
     "id": "ES",
-    "data": [...Array(11).keys()].map(e => 
+    "data": data.map(e => 
       ({
-        "x": e + 1,
-        "y": Math.random()
+        "x": e.time,
+        "y": e.score
       })
     )
   }]
