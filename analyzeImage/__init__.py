@@ -73,7 +73,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     #                         headers=headers, json={"url": image_url})
 
     body_content = req.get_body()
-    image = io.StringIO(body_content)
+    image = io.BytesIO(body_content)
 
     attributes = (
         'age,gender,headPose,smile,facialHair,glasses,emotion,hair,'
