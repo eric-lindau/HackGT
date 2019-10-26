@@ -7,12 +7,12 @@ import (
     "time"
 
 	"gocv.io/x/gocv"
-    "github.com/google/uuid"
+    //"github.com/google/uuid"
 )
 
 const (
     ID = "0"
-    API = ""
+    API = "https://swagv1.azurewebsites.net/api/analyzeImage"
     TEMP = ".temp-capture.jpg"
 )
 
@@ -29,8 +29,9 @@ func main() {
 	img := gocv.NewMat()
 	defer img.Close()
 
-    uuid := uuid.New().String()
-    print(uuid)
+    //uuid := uuid.New().String()
+    uuid := "1"  // TODO: Un-hard-code
+    println(uuid)
 
     // Continuously beam up images
     for {
@@ -56,9 +57,9 @@ func main() {
         // POST image
         resp, err := http.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
         if err != nil {
-            fmt.Printf("Could not POST image file successfully: %v\n", err.Error())
+            fmt.Printf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
         } else if resp.StatusCode != 200 {
-            fmt.Printf("Could not POST image file successfully: %v\n", resp.StatusCode)
+            fmt.Printf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
         }
 
         time.Sleep(3 * time.Second)
