@@ -1,11 +1,16 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import './App.css';
 
 const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
+const MAX_DATAPOINTS = 35
+
+let maxTimestamp = 0
+let dataPoints = 0
+let update = true
 
 async function getData() {
-  return fetch(`${DB_ENDPOINT}?pid=1`)
+  return fetch(`${DB_ENDPOINT}?pid=1&max_ts=${maxTimestamp}`)
     .then(d => d.json())
     .catch(console.log)
 }
@@ -21,8 +26,15 @@ async function generateData() {
           })
         )
         data.sort((a, b) => a.x - b.x)
+        dataPoints = data.length
         if (data.length > 0) {
           let min = data[0].x
+          if (dataPoints >= MAX_DATAPOINTS) {
+            maxTimestamp = min
+          } else {
+            maxTimestamp = 0
+            dataPoints++
+          }
           data.forEach(e => { e.x -= min })
         }
         return [{
@@ -36,11 +48,20 @@ async function generateData() {
 }
 
 function App() {
+
   const [data, setData] = useState([])
 
-  window.setInterval(() => console.log('test'), 500)
-  generateData().then(e => setData)
-  window.setInterval(() => generateData().then(setData), 500)
+  function updateData() {
+    generateData().then(newData => {
+      let useData = newData.length !== data.length ? newData : data
+      setData(useData)
+    })
+  }
+
+  if (update) {
+    update = false
+    setTimeout(function tick() {updateData(); setTimeout(tick, 500)}, 500)
+  }
 
   return (
     <div className="App">
@@ -50,7 +71,7 @@ function App() {
         </div>
         <div className="contain">
             <ResponsiveLine
-              onClick={() => generateData().then(setData)}
+              // onClick={() => generateData().then(setData)}
               data={data}
               margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
               xScale={{ type: 'point' }}
