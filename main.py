@@ -22,4 +22,7 @@ params = {
 
 response = requests.post(face_api_url, params=params,
                          headers=headers, json={"url": image_url})
+
+hap = response.json()[0]['faceAttributes']['emotion']['happiness']
+print(hap)
 print(json.dumps(response.json()))
