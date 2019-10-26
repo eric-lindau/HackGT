@@ -19,7 +19,7 @@ params = {
     'returnFaceLandmarks': 'false',
     'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
 }
-with open("img.png", "rb") as image:
+with open("sadman.png", "rb") as image:
   f = image.read()
   b = bytearray(f)
   #var = b[0]
@@ -29,7 +29,17 @@ response = requests.post(face_api_url, params=params,
 #print(response.json())
 #response = requests.post(face_api_url, params=params,
  #                        headers=headers, json={"url": image_url})
+anger = response.json()[0]['faceAttributes']['emotion']['anger']
+contempt = response.json()[0]['faceAttributes']['emotion']['contempt']
+fear = response.json()[0]['faceAttributes']['emotion']['fear']
+happiness = response.json()[0]['faceAttributes']['emotion']['happiness']
+neutral = response.json()[0]['faceAttributes']['emotion']['neutral']
+sadness = response.json()[0]['faceAttributes']['emotion']['sadness']
 
-hap = response.json()[0]['faceAttributes']['emotion']['happiness']
-print(hap)
+
+def es(ang, con, fea, hap, neu, sad):
+    return hap + .5*neu - sad - .5*fea - .5*con - .5*ang
+
+
+print("Emotional Score: " + str(es(anger, contempt, fear, happiness, neutral, sadness)))
 print(json.dumps(response.json()))
