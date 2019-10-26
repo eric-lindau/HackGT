@@ -2,44 +2,55 @@ import React, { useState} from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import './App.css';
 
-DB_ENDPOINT = ''
+const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
 
-function getData() {
-  res = await fetch(`${DB_ENDPOINT}?`)
-  if (res.statusCode != 200) {
-    console.log("BAD DATA")
-    console.log(res)
-    return []
-  }
-  data = res.json()
-  return data
+async function getData() {
+  return fetch(`${DB_ENDPOINT}?pid=1`)
+    .then(d => d.json())
+    .catch(console.log)
 }
 
-function generateData() {
-  data = getData()
-  return [{
-    "id": "ES",
-    "data": data.map(e => 
-      ({
-        "x": e.time,
-        "y": e.score
-      })
-    )
-  }]
+async function generateData() {
+  return getData()
+    .then(data => {
+      if (data) {
+        data = data.map(e => 
+          ({
+            "x": parseInt(e.ts),
+            "y": parseFloat(e.value)
+          })
+        )
+        data.sort((a, b) => a.x - b.x)
+        if (data.length > 0) {
+          let min = data[0].x
+          data.forEach(e => { e.x -= min })
+        }
+        return [{
+          "id": "ES",
+          "data": data
+        }]
+      } else {
+        return []
+      }
+    })
 }
 
 function App() {
-  const [data, setData] = useState(generateData())
+  const [data, setData] = useState([])
+
+  window.setInterval(() => console.log('test'), 500)
+  generateData().then(e => setData)
+  window.setInterval(() => generateData().then(setData), 500)
 
   return (
     <div className="App">
       <header className="App-header">
-        <div class="App-logo">
+        <div className="App-logo">
             self
         </div>
-        <div class="contain">
+        <div className="contain">
             <ResponsiveLine
-              onClick={() => {setData(generateData())}}
+              onClick={() => generateData().then(setData)}
               data={data}
               margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
               xScale={{ type: 'point' }}
@@ -87,11 +98,6 @@ function App() {
                       fill: 'white',
                       fontSize: 12
                     }
-                  }
-                },
-                legends: {
-                  text: {
-                    fill: 'red'
                   }
                 },
                 crosshair: {
