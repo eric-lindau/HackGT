@@ -51,7 +51,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     response = requests.post(face_api_url,
                              params=params,
                              headers=headers_disk,
-                             data=req.body)
+                             data=req.get_body())
 
     anger = response.json()[0]['faceAttributes']['emotion']['anger']
     contempt = response.json()[0]['faceAttributes']['emotion']['contempt']
@@ -84,7 +84,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         except Exception as e:
             logging.info(e)
-    send_image(req.body)
+    send_image(req.get_body())
     def es(ang, con, fea, hap, neu, sad):
         return hap + .5 * neu - sad - .5 * fea - .5 * con - .5 * ang
 
