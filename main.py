@@ -1,8 +1,10 @@
 import requests
 import json
 
+with open('config.JSON') as config_file:
+    data = json.load(config_file)
 # set to your own subscription key value
-subscription_key = '4e575b9e583d4c2189801f7bc8f86ce6'
+subscription_key = data["subKey"]
 assert subscription_key
 
 # replace <My Endpoint String> with the string from your endpoint URL
