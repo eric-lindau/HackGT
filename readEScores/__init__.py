@@ -20,6 +20,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     pid = req.params.get("pid")
     max_ts = req.params.get("max_ts")
+    if not max_ts:
+        max_ts = 0
+
     logging.info("pid: " + pid)
 
     if pid:
