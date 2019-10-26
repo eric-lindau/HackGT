@@ -17,15 +17,17 @@ logging.info(table)
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     # logging.info(table)
-    new_name = req.params.get('name')
-    new_school = req.params.get('school')
+    pid = req.params.get('person')
+    ts = req.params.get('ts')
+    value = req.params.get('value')
 
-    new_person = Entity()
-    new_person.PartitionKey = "1"
-    new_person.RowKey = str(uuid.uuid4())
-    new_person.name = new_name
-    new_person.school = new_school
+    new_es = Entity()
+    new_es.PartitionKey = "1"
+    new_es.RowKey = str(uuid.uuid4())
+    new_es.pid = pid
+    new_es.ts = ts
+    new_es.value = value
 
-    etag = table.insert_entity(table_name, new_person)
+    etag = table.insert_entity(table_name, new_es)
 
-    return func.HttpResponse(str(new_person.RowKey), status_code=200)
+    return func.HttpResponse(str(new_es.RowKey), status_code=200)
