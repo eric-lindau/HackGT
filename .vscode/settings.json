@@ -5,6 +5,6 @@
     "azureFunctions.projectLanguage": "Python",
     "azureFunctions.projectRuntime": "~2",
     "debug.internalConsoleOptions": "neverOpen",
-    "python.pythonPath": "/home/fisher/Projects/HackGT/.venv/bin/python3",
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
     "python.formatting.provider": "yapf"
 }
