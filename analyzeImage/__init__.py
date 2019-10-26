@@ -19,12 +19,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # Get Configuration
     config = {
         "face-api": {
-            "url": "https://emotiontrack.cognitiveservices.azure.com/face/v1.0",
+            "url":
+            "https://emotiontrack.cognitiveservices.azure.com/face/v1.0",
             "key": "4e575b9e583d4c2189801f7bc8f86ce6"
         },
         "block-blob": {
-            "name": "hackgt19",
-            "key": "24wGa1RHd0BnemSDBbqRzvvTAB7Qy4IAN28E9de6OLR98wxnFljJXnKaBtzqJd2F53SmtNZP2NnZCPZkeL6wlQ=="
+            "name":
+            "hackgt19",
+            "key":
+            "24wGa1RHd0BnemSDBbqRzvvTAB7Qy4IAN28E9de6OLR98wxnFljJXnKaBtzqJd2F53SmtNZP2NnZCPZkeL6wlQ=="
         }
     }
 
@@ -75,9 +78,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     body_content = req.get_body()
     image = io.BytesIO(body_content)
 
-    attributes = (
-        'age,gender,headPose,smile,facialHair,glasses,emotion,hair,'
-        'makeup,occlusion,accessories,blur,exposure,noise')
+    attributes = ('age,gender,headPose,smile,facialHair,glasses,emotion,hair,'
+                  'makeup,occlusion,accessories,blur,exposure,noise')
 
     try:
         res = CF.face.detect(image, True, False, attributes)
@@ -86,10 +88,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info('{} face(s) has been detected.'.format(len(res)))
     except CF.CognitiveFaceException as exp:
         logging.error('Response: {}. {}'.format(exp.code, exp.msg))
-        
+
     time_now = datetime.now()
     timestamp = datetime.timestamp(time_now)
-    
+
     for face in res:
         logging.info(json.dumps(face))
 
@@ -104,7 +106,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         neutral = face_emotion['neutral']
         sadness = face_emotion['sadness']
 
-        es_value = emotion_score(anger, contempt, fear, happiness, neutral, sadness)
+        es_value = emotion_score(anger, contempt, fear, happiness, neutral,
+                                 sadness)
 
         logging.info("Face-ID: {}".format(face_id))
         logging.info("Emotion Score: {}".format(es_value))
@@ -118,18 +121,21 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(params)
 
         logging.info("Uploading Face Data to 'insertEScore' Function")
-        response = requests.post("https://swagv1.azurewebsites.net/api/insertEScore", body=face, params=params)
+        response = requests.post(
+            "https://swagv1.azurewebsites.net/api/insertEScore",
+            data=face,
+            params=params)
         if response.status_code == 200:
             logging.info("Upload Successful")
         else:
             logging.error("Error: {}".format(response.json()))
 
-    
     logging.info("Uploading Image to 'imageblobs' Blob")
     try:
         container_name = 'imageblobs'
         # Create the BlockBlockService that is used to call the Blob service for the storage account
-        block_blob_service = BlockBlobService(account_name=block_blob_name, account_key=block_blob_key)
+        block_blob_service = BlockBlobService(account_name=block_blob_name,
+                                              account_key=block_blob_key)
 
         # Create a container called 'imageblobs'.
         block_blob_service.create_container(container_name)
@@ -139,7 +145,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             container_name, public_access=PublicAccess.Container)
 
         # Upload the created file, use local_file_name for the blob name
-        block_blob_service.create_blob_from_bytes(container_name, blob_name, image)
+        block_blob_service.create_blob_from_bytes(container_name, blob_name,
+                                                  image)
         # List the blobs in the container
         # logging.info("\nList blobs in the container")
         # generator = block_blob_service.list_blobs(container_name)
