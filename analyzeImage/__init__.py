@@ -116,7 +116,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(params)
 
         logging.info("Uploading Face Data to 'insertEScore' Function")
-        response = requests.post("https://swagv1.azurewebsites.net/api/insertEScore", params=params)
+        response = requests.post("https://swagv1.azurewebsites.net/api/insertEScore", body=face, params=params)
         if response.status_code == 200:
             logging.info("Upload Successful")
         else:
@@ -146,7 +146,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info("Upload '{}' Successful".format(blob_name))
     except Exception as e:
         logging.error("Error: {}".format(e))
-    
+
     logging.info("Finishing Analyze Image Function")
 
     # need to return es as HTTP response
