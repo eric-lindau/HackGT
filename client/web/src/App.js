@@ -4,9 +4,10 @@ import './App.css';
 
 function generateData() {
   return [{
+    "id": "ES",
     "data": [...Array(11).keys()].map(e => 
       ({
-        "x": e,
+        "x": e + 1,
         "y": Math.random()
       })
     )
@@ -14,7 +15,7 @@ function generateData() {
 }
 
 function App() {
-  const [dat, setDat] = useState(generateData())
+  const [data, setData] = useState(generateData())
 
   return (
     <div className="App">
@@ -24,8 +25,8 @@ function App() {
         </div>
         <div class="contain">
             <ResponsiveLine
-              onClick={() => {setDat(generateData())}}
-              data={dat}
+              onClick={() => {setData(generateData())}}
+              data={data}
               margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
               xScale={{ type: 'point' }}
               yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
