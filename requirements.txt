@@ -1,2 +1,4 @@
 cognitive_face==1.4.2
 requests==2.22.0
+azure==4.0.0
+azure-functions==1.0.4
