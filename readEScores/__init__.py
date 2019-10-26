@@ -29,12 +29,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         escores = []
 
         for entity in escore_entities:
-            logging.info(str(entity))
+            # logging.info(str(entity))
             escore = {
                 "value": entity["value"],
                 "ts": entity["ts"],
             }
             escores.append(escore)
+
+        logging.info(escores)
 
         headers = {"Access-Control-Allow-Origin": "*"}
 
