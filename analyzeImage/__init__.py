@@ -90,7 +90,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.error('Response: {}. {}'.format(exp.code, exp.msg))
 
     time_now = datetime.now()
-    timestamp = datetime.timestamp(time_now)
+    timestamp = int(datetime.timestamp(time_now) * 100)
 
     for face in res:
         logging.info(json.dumps(face))
