@@ -1,6 +1,6 @@
 {
   "face-api": {
-    "url": "https://emotiontrack.cognitiveservices.azure.com/face/v1.0",
+    "url": "https://hackgt19.cognitiveservices.azure.com/face/v1.0/detect",
     "key": "4e575b9e583d4c2189801f7bc8f86ce6"
   }
 }

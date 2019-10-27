@@ -5,15 +5,22 @@ chrome.runtime.onInstalled.addListener(() => {
   	
 });
 
-/*chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-   chrome.tabs.query({'active': true}, function(tab) {
-  		alert(tab[0].url);
- });
-}); 
-*/
 chrome.tabs.onCreated.addListener(function(tab) {
    chrome.tabs.query({'active': true}, function(tab) {
-  		alert(tab[0].url);
+  		alert(new URL(tab[0].url).hostname);
+  		// Sending a receiving data in JSON format using GET method     
+	var xhr = new XMLHttpRequest();
+	var url = "https://swagv1.azurewebsites.net/api/insertMetadata?" + "pid=1";
+	xhr.open("GET", url, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setBody(JSON.stringify({"sites": tab}));
+	xhr.onreadystatechange = function () {
+	if (xhr.readyState === 4 && xhr.status === 200) {
+	    var json = JSON.parse(xhr.responseText);
+	    console.log(json.email + ", " + json.password);
+	}
+	};
+	xhr.send();
  });
 }); 
 
@@ -22,7 +29,18 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab){
   	alert(tab.url);
      console.log(tab.url);
+     // Sending a receiving data in JSON format using GET method     
+	var xhr = new XMLHttpRequest();
+	var url = "https://swagv1.azurewebsites.net/api/insertMetadata?" + "pid=1";
+	xhr.open("GET", url, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setBody(JSON.stringify({"sites": tab}));
+	xhr.onreadystatechange = function () {
+	if (xhr.readyState === 4 && xhr.status === 200) {
+	    var json = JSON.parse(xhr.responseText);
+	    console.log(json.email + ", " + json.password);
+	}
+	};
+	xhr.send();
   });
 }); 
-//chrome.extension.getBackgroundPage().console.log('foo');
-//https://stackoverflow.com/questions/11156479/how-do-i-use-chrome-tabs-onupdated-addlistener
