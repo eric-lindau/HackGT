@@ -57,7 +57,7 @@ function compileEmotionData(data) {
     Object.keys(obj).forEach(key => {
       let n = {
         "x": e.ts - min,
-        "y": obj[key]
+        "y": obj[key] + 0.016
       }
       if (!(key in emotions)) {
         emotions[key] = [n]
@@ -68,7 +68,7 @@ function compileEmotionData(data) {
   })
   let res = []
   Object.keys(emotions).forEach(key => {
-    if (key in emotions && emotions[key].length > 0) {
+    if (key !== 'surprise' && key in emotions && emotions[key].length > 0) {
       res.push({
         "id": key,
         "data": emotions[key]
@@ -105,7 +105,7 @@ function App() {
     getAcvitityData(AC_ENDPOINT).then(newData => {
       activityMap = {}
       newData.forEach(el => {
-        let tsThresh = Math.round(el.ts / 1000)
+        let tsThresh = Math.round(el.ts / 95000)
         let url = processActivity(el.site)
         if (!(tsThresh in activityMap) && url) {
           activityMap[tsThresh] = [url]
@@ -113,6 +113,7 @@ function App() {
           activityMap[tsThresh].push(url)
         }
       })
+      console.log(activityMap)
     })
   }
 

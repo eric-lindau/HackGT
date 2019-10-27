@@ -11,11 +11,12 @@ const imageMap = {
 function swag(min, activityMap) {
   return ({slice}) => {
     let x = Math.round(slice.points[0].x)
-    let t = Math.round((min + x) / 1000)
+    let t = Math.round((min + x) / 95000)
     // let fake = 15721503212
     let im = []
     if (t in activityMap) {
-      im = activityMap[t]
+      let d = activityMap[t].sort()
+      im = d.filter((v, i) => i < 1 || d[i - 1] !== v)
     }
     return (
       <div>
@@ -33,7 +34,7 @@ function ESGraph({data, legend, min, activityMap}) {
         data={data}
         margin={{ top: 15, right: legend ? 110 : 10, bottom: 50, left: 60 }}
         xScale={{ type: 'point' }}
-        yScale={{ type: 'linear', stacked: true, min: '0', max: '1' }}
+        yScale={{ type: 'linear', stacked: true, min: '0', max: '1.05' }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
