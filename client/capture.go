@@ -14,7 +14,7 @@ import (
 const (
     ID = "0"
     API = "https://swagv1.azurewebsites.net/api/analyzeImage"
-    TEMP = ".temp-capture.jpg"
+    TEMP = "./.temp-capture.jpg"
 )
 
 func main() {
@@ -24,8 +24,6 @@ func main() {
 		return
 	}
 	defer dev.Close()
-    // Camera requires some time to warm up
-    time.Sleep(300 * time.Millisecond)
 
 	img := gocv.NewMat()
 	defer img.Close()
@@ -34,37 +32,42 @@ func main() {
     uuid := "1"  // TODO: Un-hard-code
     println(uuid)
 
+    client := &http.Client{Timeout: 10 * time.Second}
+
     // Continuously beam up images
     for {
+        time.Sleep(3100 * time.Millisecond) // Fine as camera needs time to warm up
         if success := dev.Read(&img); !success {
-            fmt.Printf("No data read from camera device %v\n", ID)
-            return
+            log.Printf("No data read from camera device %v\n", ID)
+            continue
         }
         if img.Empty() {
-            fmt.Printf("No image found on camera device %v\n", ID)
-            return
+            log.Printf("No image found on camera device %v\n", ID)
+            continue
         }
 
         // Write image to disk
         // NOTE: gocv currently only supports writing to file. So re-read it and beam it up.
-        gocv.IMWrite(TEMP, img)
+        if success := gocv.IMWrite(TEMP, img); !success {
+            continue
+        }
         file, err := os.Open(TEMP)
         if err != nil {
             fmt.Printf("Could not re-read image file: %v\n", err.Error())
-            return
+            continue
         }
 
         // TODO: If problematic, switch to image/jpg
         // POST image
-        resp, err := http.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
+        resp, err := client.Post(API + "?" + "pid=" + uuid, "application/octet-stream", file)
         if err != nil {
-            log.Fatalf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
+            log.Printf("Could not POST image file successfully: %v \n -> \n %v \n", err.Error(), resp)
+            continue
         } else if resp.StatusCode != 200 {
-            log.Fatalf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
-        } else {
+            log.Printf("Could not POST image file successfully: %v \n -> \n %v \n", resp.StatusCode, resp)
+            continue
+        } else if resp.StatusCode == 200 {
             log.Printf("Image sent successfully\n")
         }
-
-        time.Sleep(1 * time.Second)
     }
 }
