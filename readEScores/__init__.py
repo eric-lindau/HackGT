@@ -26,7 +26,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("pid: " + pid)
 
     if pid:
-        pfilter = f"pid eq '{pid} and ts ge {max_ts}'"
+        pfilter = f"pid eq '{pid}' and ts ge {max_ts}"
 
         escore_entities = table.query_entities(table_name, filter=pfilter)
 
