@@ -11,7 +11,7 @@ const imageMap = {
 function swag(min, activityMap) {
   return ({slice}) => {
     let x = Math.round(slice.points[0].x)
-    let t = Math.round((min + x) / 100000)
+    let t = Math.round((min + x) / 1000)
     // let fake = 15721503212
     let im = []
     if (t in activityMap) {
@@ -19,8 +19,8 @@ function swag(min, activityMap) {
     }
     return (
       <div>
-        {t}
-        {im.map(im => <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap[im]}/>)}
+        {/* {t} */}
+        {im.map(im => <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap[im]} alt={im}/>)}
       </div>
     )
   }
@@ -30,7 +30,7 @@ function ESGraph({data, legend, min, activityMap}) {
   return (
     <ResponsiveLine
         data={data}
-        margin={{ top: 50, right: legend ? 110 : 10, bottom: 50, left: 60 }}
+        margin={{ top: 15, right: legend ? 110 : 10, bottom: 50, left: 60 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear', stacked: true, min: '0', max: '1' }}
         axisTop={null}
@@ -42,7 +42,7 @@ function ESGraph({data, legend, min, activityMap}) {
             tickRotation: 0,
             legend: 'Time',
             legendOffset: 36,
-            legendPosition: 'middle'
+            legendPosition: 'middle',
         }}
         axisLeft={{
             orient: 'left',

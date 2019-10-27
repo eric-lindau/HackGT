@@ -35,7 +35,7 @@ async function getAcvitityData(endpoint) {
 
 function compileESData(data) {
   data = data.map(e => ({
-      "x": e.ts - min,
+      "x": Math.round((e.ts - min) / 100),
       "y": parseFloat(e.value)
     })
   )
@@ -55,7 +55,7 @@ function compileEmotionData(data) {
     let obj = JSON.parse(e.data).faceAttributes.emotion
     Object.keys(obj).forEach(key => {
       let n = {
-        "x": e.ts - min,
+        "x": Math.round((e.ts - min) / 100),
         "y": obj[key]
       }
       if (!(key in emotions)) {
@@ -104,7 +104,7 @@ function App() {
     getAcvitityData(AC_ENDPOINT).then(newData => {
       activityMap = {}
       newData.forEach(el => {
-        let tsThresh = Math.round(el.ts / 100000)
+        let tsThresh = Math.round(el.ts / 1000)
         let url = processActivity(el.site)
         if (!(tsThresh in activityMap) && url) {
           activityMap[tsThresh] = [url]
@@ -126,12 +126,14 @@ function App() {
       <header className="App-header">
         <div className="App-logo">
             self
-            <img id="logo" src={logo}></img>
+            <img id="logo" src={logo} alt="Auralytics"></img>
         </div>
         <div className="contain">
+            <div style={{fontSize: '1rem'}}>Calculated Emotion Score</div>
             <ESGraph data={ESData} legend={false} min={min} activityMap={activityMap}/>
         </div>
         <div className="contain">
+            <div style={{fontSize: '1rem'}}>Individual Emotion Measures</div>
             <ESGraph data={EmotionData} legend={true} min={min} activityMap={activityMap}/>
         </div>
       </header>
