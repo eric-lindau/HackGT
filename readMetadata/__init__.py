@@ -35,7 +35,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         for metadata in metadata_entities:
             # logging.info(str(entity))
-            meta = {"ts": entity["ts"], "sites": entity["sites"]}
+            meta = {"ts": entity["ts"], "site": entity["site"]}
             metadatas.append(meta)
 
         logging.info(metadatas)
