@@ -11,7 +11,7 @@ const imageMap = {
 function swag(min, activityMap) {
   return ({slice}) => {
     let x = Math.round(slice.points[0].x)
-    let t = Math.round((min + x) / 95000)
+    let t = Math.round((min + x) / 95650)
     // let fake = 15721503212
     let im = []
     if (t in activityMap) {
@@ -20,7 +20,7 @@ function swag(min, activityMap) {
     }
     return (
       <div>
-        {/* {t} */}
+        {t}
         {im.map(im => <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap[im]} alt={im}/>)}
       </div>
     )

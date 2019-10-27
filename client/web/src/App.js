@@ -105,7 +105,7 @@ function App() {
     getAcvitityData(AC_ENDPOINT).then(newData => {
       activityMap = {}
       newData.forEach(el => {
-        let tsThresh = Math.round(el.ts / 95000)
+        let tsThresh = Math.round(el.ts / 95650)
         let url = processActivity(el.site)
         if (!(tsThresh in activityMap) && url) {
           activityMap[tsThresh] = [url]
