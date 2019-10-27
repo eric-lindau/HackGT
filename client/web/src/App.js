@@ -8,7 +8,7 @@ const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
 const AC_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readMetadata'
 const MAX_DATAPOINTS = 20
 
-const urlMappings = ['google', 'facebook', 'instagram']
+const urlMappings = ['google', 'facebook', 'instagram', 'youtube']
 
 let activityMap = {}
 
@@ -79,7 +79,7 @@ function compileEmotionData(data) {
 
 function processActivity(site) {
   for (let thing in urlMappings) {
-    if (site.toLowerCase().includes(thing)) {
+    if (site.toLowerCase().includes(urlMappings[thing])) {
       return urlMappings[thing]
     }
   }
@@ -104,7 +104,7 @@ function App() {
     getAcvitityData(AC_ENDPOINT).then(newData => {
       activityMap = {}
       newData.forEach(el => {
-        let tsThresh = el.ts / 10
+        let tsThresh = Math.round(el.ts / 100000)
         let url = processActivity(el.site)
         if (!(tsThresh in activityMap) && url) {
           activityMap[tsThresh] = [url]
@@ -112,14 +112,13 @@ function App() {
           activityMap[tsThresh].push(url)
         }
       })
-      console.log(activityMap)
     })
   }
 
   if (update) {
     update = false
     updateData();
-    setTimeout(function tick() {updateData(); setTimeout(tick, 3500)}, 3500)
+    setTimeout(function tick() {updateData(); setTimeout(tick, 5000)}, 5000)
   }
 
   return (

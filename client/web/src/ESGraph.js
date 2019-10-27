@@ -3,24 +3,24 @@ import { ResponsiveLine } from '@nivo/line';
 
 const imageMap = {
   'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png',
-  'facebook': 'http://truckoutfittersllc.com/wp-content/uploads/2018/11/download-facebook-logo-png-18.png',
+  'facebook': 'https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=256&h=256',
   'instagram': 'http://pluspng.com/img-png/instagram-png-instagram-png-logo-1455.png',
-  // 'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png',
+  'youtube': 'http://pngimg.com/uploads/youtube/youtube_PNG12.png',
 }
 
 function swag(min, activityMap) {
   return ({slice}) => {
     let x = Math.round(slice.points[0].x)
-    let t = (min + x) / 10
-    let fake = 15721503212
+    let t = Math.round((min + x) / 100000)
+    // let fake = 15721503212
     let im = []
-    if (fake in activityMap) {
-      im = activityMap[fake]
+    if (t in activityMap) {
+      im = activityMap[t]
     }
     return (
       <div>
+        {t}
         {im.map(im => <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap[im]}/>)}
-        {/* <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap['google']}/> */}
       </div>
     )
   }
@@ -32,7 +32,7 @@ function ESGraph({data, legend, min, activityMap}) {
         data={data}
         margin={{ top: 50, right: legend ? 110 : 10, bottom: 50, left: 60 }}
         xScale={{ type: 'point' }}
-        yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
+        yScale={{ type: 'linear', stacked: true, min: '0', max: '1' }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -66,6 +66,7 @@ function ESGraph({data, legend, min, activityMap}) {
         enableSlices={'x'}
         pointLabelYOffset={-12}
         useMesh={true}
+        enableArea={true}
         curve={'natural'}
         legends={legend ? [
           {
