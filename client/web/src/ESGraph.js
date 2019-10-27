@@ -31,7 +31,7 @@ function ESGraph({data, legend}) {
         }}
         enableGridX={false}
         enableGridY={true}
-        colors={{ scheme: 'pastel2' }}
+        colors={{ scheme: 'nivo' }}
         pointSize={10}
         pointColor={{ theme: 'background' }}
         pointBorderWidth={2}

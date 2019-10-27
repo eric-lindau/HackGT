@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import './App.css';
 import ESGraph from './ESGraph';
-import Pie from './Pie';
+import logo from './logo.png';
 
 const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
 const MAX_DATAPOINTS = 20
@@ -15,10 +15,13 @@ async function getData(endpoint) {
   return fetch(`${endpoint}?pid=1&max_ts=${maxTimestamp}`)
     .then(data => data ? data.json() : [])
     .then(data => {
+      console.log(data)
       data.sort((a, b) => a.ts - b.ts)
-      data = data.filter((v, i) => i < 1 ? true : data[i - 1].ts === v.ts)
+      console.log(data)
+      // data = data.filter((v, i) => i < 1 ? true : data[i - 1].ts === v.ts)
+      console.log(data.length)
+      console.log(data.length - Math.min(data.length, MAX_DATAPOINTS))
       min = data[data.length - Math.min(data.length, MAX_DATAPOINTS)].ts
-      // console.log('m', min)
       return data.slice(MAX_DATAPOINTS * -1, data.length)
     })
     .catch(console.log)
@@ -27,7 +30,7 @@ async function getData(endpoint) {
 function compileESData(data) {
   data = data.map(e => ({
       "x": e.ts - min,
-      "y": parseFloat(e.value) * 1000
+      "y": parseFloat(e.value)
     })
   )
   
@@ -77,6 +80,7 @@ function App() {
       if (!newData) {
         return
       }
+      console.log(newData)
       let compiledES = compileESData(newData)
       let compiledEmotions = compileEmotionData(newData)
       setESData(compiledES)
@@ -86,7 +90,7 @@ function App() {
 
   if (update) {
     update = false
-    setTimeout(function tick() {updateData(); setTimeout(tick, 5000)}, 5000)
+    setTimeout(function tick() {updateData(); setTimeout(tick, 3000)}, 3000)
   }
 
   return (
@@ -94,6 +98,7 @@ function App() {
       <header className="App-header">
         <div className="App-logo">
             self
+            <img id="logo" src={logo}></img>
         </div>
         <div className="contain">
             <ESGraph data={ESData} legend={false}/>
