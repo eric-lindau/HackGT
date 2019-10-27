@@ -5,7 +5,7 @@ import azure.functions as func
 from azure.cosmosdb.table.tableservice import TableService
 from azure.cosmosdb.table.models import Entity
 
-table_name = "escores"
+table_name = "metadata"
 partition_key = "1"
 
 conn_string = "DefaultEndpointsProtocol=https;AccountName=hackgt19;AccountKey=24wGa1RHd0BnemSDBbqRzvvTAB7Qy4IAN28E9de6OLR98wxnFljJXnKaBtzqJd2F53SmtNZP2NnZCPZkeL6wlQ==;EndpointSuffix=core.windows.net"
@@ -27,7 +27,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if pid:
         pfilter = f"pid eq '{pid}' and ts ge {max_ts}"
-        logging.log(f"filter: '{pfilter}'")
+        logging.info(f"filter: '{pfilter}'")
 
         metadata_entities = table.query_entities(table_name, filter=pfilter)
 
@@ -35,7 +35,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         for metadata in metadata_entities:
             # logging.info(str(entity))
-            meta = {"ts": entity["ts"], "site": entity["site"]}
+            meta = {"ts": metadata["ts"], "site": metadata["site"]}
             metadatas.append(meta)
 
         logging.info(metadatas)
