@@ -123,8 +123,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info("Uploading Face Data to 'insertEScore' Function")
         response = requests.post(
             "https://swagv1.azurewebsites.net/api/insertEScore",
-            data=face.json(),
+            json=json.dumps(face),
             params=params)
+
         if response.status_code == 200:
             logging.info("Upload Successful")
         else:
