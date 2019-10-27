@@ -89,6 +89,7 @@ class DetectionPanel(base.MyPanel):
         t = threading.Thread(target=self.loop, args=())
         t.start()
 
+    @util.async
     def detect(self, path):
         """Async detection."""
         self.log.log('Request: Detecting {}'.format(path))
@@ -146,4 +147,4 @@ class DetectionPanel(base.MyPanel):
             self.get_latest_blob(save_path)
             self.bitmap.set_path(save_path)
             self.detect(save_path)
-            time.sleep(1.5)
+            time.sleep(2.0)
