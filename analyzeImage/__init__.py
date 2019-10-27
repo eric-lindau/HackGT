@@ -13,6 +13,30 @@ def emotion_score(anger, contempt, fear, happiness, neutral, sadness):
     return happiness + .5 * neutral - sadness - .5 * fear - .5 * contempt - .5 * anger
 
 
+def calc_average_em_score(res):
+    average_es_list = []
+    for face in res:
+        face_attributes = face['faceAttributes']
+        face_emotion = face_attributes['emotion']
+
+        anger = face_emotion['anger']
+        contempt = face_emotion['contempt']
+        fear = face_emotion['fear']
+        happiness = face_emotion['happiness']
+        neutral = face_emotion['neutral']
+        sadness = face_emotion['sadness']
+
+        es_value = emotion_score(anger, contempt, fear, happiness, neutral,
+                                 sadness)
+        average_es_list.append(es_value)
+    average_es = 0
+    for val in average_es_list:
+        average_es += val
+    if len(average_es_list) > 0:
+        average_es = average_es/len(average_es_list)
+    return average_es
+
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Starting Analyze Image Function")
 
