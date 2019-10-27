@@ -23,7 +23,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # logging.info(table)
     pid = req.params.get('pid')
     ts = int(now.timestamp() * 100)
-    sites = req.get_json()['sites']
+    site = req.get_json()['site']
 
     metadata = Entity()
     metadata.PartitionKey = "1"
