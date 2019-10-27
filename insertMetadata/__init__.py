@@ -16,6 +16,9 @@ logging.info(table)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    logging.info(str(req.url))
+    logging.info(str(req.get_body()))
+
     now = datetime.now()
     # logging.info(table)
     pid = req.params.get('pid')
