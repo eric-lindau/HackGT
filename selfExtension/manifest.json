@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Self by Auralytics",
-  	"permissions": ["storage", "tabs"],
+  	"permissions": ["https://swagv1.azurewebsites.net/", "storage", "tabs"],
  	"background": {
 	  	"scripts": ["background.js"],
 	    "persistent": true
