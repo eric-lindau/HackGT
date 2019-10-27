@@ -21,6 +21,7 @@ async function getData(endpoint) {
     .then(data => data ? data.json() : [])
     .then(data => {
       data.sort((a, b) => a.ts - b.ts)
+      data = data.filter((v, i) => i < 1 ? true : data[i - 1].ts !== v.ts)
       min = data[data.length - Math.min(data.length, MAX_DATAPOINTS)].ts
       return data.slice(MAX_DATAPOINTS * -1, data.length)
     })
@@ -35,7 +36,7 @@ async function getAcvitityData(endpoint) {
 
 function compileESData(data) {
   data = data.map(e => ({
-      "x": Math.round((e.ts - min) / 100),
+      "x": e.ts - min,
       "y": parseFloat(e.value)
     })
   )
@@ -55,11 +56,11 @@ function compileEmotionData(data) {
     let obj = JSON.parse(e.data).faceAttributes.emotion
     Object.keys(obj).forEach(key => {
       let n = {
-        "x": Math.round((e.ts - min) / 100),
-        "y": obj[key]
+        "x": e.ts - min,
+        "y": obj[key] + 0.016
       }
       if (!(key in emotions)) {
-        emotions[key] = []
+        emotions[key] = [n]
       } else {
         emotions[key].push(n)
       }
@@ -104,7 +105,7 @@ function App() {
     getAcvitityData(AC_ENDPOINT).then(newData => {
       activityMap = {}
       newData.forEach(el => {
-        let tsThresh = Math.round(el.ts / 1000)
+        let tsThresh = Math.round(el.ts / 95650)
         let url = processActivity(el.site)
         if (!(tsThresh in activityMap) && url) {
           activityMap[tsThresh] = [url]
@@ -112,6 +113,7 @@ function App() {
           activityMap[tsThresh].push(url)
         }
       })
+      console.log(activityMap)
     })
   }
 

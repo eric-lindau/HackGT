@@ -36,7 +36,7 @@ func main() {
 
     // Continuously beam up images
     for {
-        time.Sleep(3100 * time.Millisecond) // Fine as camera needs time to warm up
+        time.Sleep(4000 * time.Millisecond) // Fine as camera needs time to warm up
         if success := dev.Read(&img); !success {
             log.Printf("No data read from camera device %v\n", ID)
             continue
