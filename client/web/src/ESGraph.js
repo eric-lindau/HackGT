@@ -27,6 +27,7 @@ function swag(min, activityMap) {
 }
 
 function ESGraph({data, legend, min, activityMap}) {
+  console.log(data)
   return (
     <ResponsiveLine
         data={data}
@@ -66,6 +67,7 @@ function ESGraph({data, legend, min, activityMap}) {
         enableSlices={'x'}
         pointLabelYOffset={-12}
         useMesh={true}
+        enablePoints={false}
         enableArea={true}
         curve={'natural'}
         legends={legend ? [
