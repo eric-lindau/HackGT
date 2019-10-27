@@ -221,3 +221,5 @@ obj
 appsettings.json
 local.settings.json
 .python_packages
+
+node_modules

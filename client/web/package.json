@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@nivo/bump": "^0.59.1",
     "@nivo/line": "^0.59.3",
+    "@nivo/pie": "^0.59.1",
     "nivo": "^0.31.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
