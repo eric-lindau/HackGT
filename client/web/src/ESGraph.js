@@ -1,7 +1,23 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 
-function ESGraph({data, legend}) {
+const imageMap = {
+  'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png'
+}
+
+function swag(min) {
+  return ({slice}) => {
+    let x = Math.round(slice.points[0].x)
+    return (
+      <div>
+        {min + x}
+        <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap['google']}/>
+      </div>
+    )
+  }
+}
+
+function ESGraph({data, legend, min}) {
   return (
     <ResponsiveLine
         data={data}
@@ -37,6 +53,8 @@ function ESGraph({data, legend}) {
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
         pointLabel="y"
+        sliceTooltip={swag(min)}
+        enableSlices={'x'}
         pointLabelYOffset={-12}
         useMesh={true}
         legends={legend ? [

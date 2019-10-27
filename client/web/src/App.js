@@ -15,12 +15,7 @@ async function getData(endpoint) {
   return fetch(`${endpoint}?pid=1&max_ts=${maxTimestamp}`)
     .then(data => data ? data.json() : [])
     .then(data => {
-      console.log(data)
       data.sort((a, b) => a.ts - b.ts)
-      console.log(data)
-      // data = data.filter((v, i) => i < 1 ? true : data[i - 1].ts === v.ts)
-      console.log(data.length)
-      console.log(data.length - Math.min(data.length, MAX_DATAPOINTS))
       min = data[data.length - Math.min(data.length, MAX_DATAPOINTS)].ts
       return data.slice(MAX_DATAPOINTS * -1, data.length)
     })
@@ -61,7 +56,7 @@ function compileEmotionData(data) {
   })
   let res = []
   Object.keys(emotions).forEach(key => {
-    if (key in emotions && emotions[key].length > 0) {
+    if (key !== 'surprise' && key in emotions && emotions[key].length > 0) {
       res.push({
         "id": key,
         "data": emotions[key]
@@ -80,7 +75,6 @@ function App() {
       if (!newData) {
         return
       }
-      console.log(newData)
       let compiledES = compileESData(newData)
       let compiledEmotions = compileEmotionData(newData)
       setESData(compiledES)
@@ -90,7 +84,8 @@ function App() {
 
   if (update) {
     update = false
-    setTimeout(function tick() {updateData(); setTimeout(tick, 3000)}, 3000)
+    updateData();
+    setTimeout(function tick() {updateData(); setTimeout(tick, 3500)}, 3500)
   }
 
   return (
@@ -101,10 +96,10 @@ function App() {
             <img id="logo" src={logo}></img>
         </div>
         <div className="contain">
-            <ESGraph data={ESData} legend={false}/>
+            <ESGraph data={ESData} legend={false} min={min}/>
         </div>
         <div className="contain">
-            <ESGraph data={EmotionData} legend={true}/>
+            <ESGraph data={EmotionData} legend={true} min={min}/>
         </div>
       </header>
     </div>
