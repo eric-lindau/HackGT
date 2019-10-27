@@ -27,26 +27,22 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if pid:
         pfilter = f"pid eq '{pid}' and ts ge {max_ts}"
+        logging.log(f"filter: '{pfilter}'")
 
-        escore_entities = table.query_entities(table_name, filter=pfilter)
+        metadata_entities = table.query_entities(table_name, filter=pfilter)
 
-        escores = []
+        metadatas = []
 
-        for entity in escore_entities:
+        for metadata in metadata_entities:
             # logging.info(str(entity))
-            escore = {
-                "value": entity["value"],
-                "ts": entity["ts"],
-                "data": entity["data"]
-            }
-            escores.append(escore)
+            meta = {"ts": entity["ts"], "sites": entity["sites"]}
+            metadatas.append(meta)
 
-        logging.info(escores)
+        logging.info(metadatas)
 
         headers = {"Access-Control-Allow-Origin": "*"}
 
-        # return func.HttpResponse(json.dumps(person), status_code=200)
-        return func.HttpResponse(json.dumps(escores),
+        return func.HttpResponse(json.dumps(metadatas),
                                  status_code=200,
                                  headers=headers)
     else:
