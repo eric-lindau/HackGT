@@ -2,32 +2,32 @@ import React, { useState } from 'react';
 
 import './App.css';
 import ESGraph from './ESGraph';
-import EmotionMultiGraph from './EmotionMultiGraph';
+import Pie from './Pie';
 
 const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
-const MAX_DATAPOINTS = 35
+const MAX_DATAPOINTS = 20
 
 let maxTimestamp = 0
 let update = true
+let min = 0
 
 async function getData(endpoint) {
   return fetch(`${endpoint}?pid=1&max_ts=${maxTimestamp}`)
     .then(data => data ? data.json() : [])
     .then(data => {
       data.sort((a, b) => a.ts - b.ts)
-      let min = data.length >= MAX_DATAPOINTS ?
-        data[data.length - MAX_DATAPOINTS].ts : (data.length > 0 ? data[0].ts : 0)
-      data.forEach(e => { e.ts -= min })
-
-      return data.length >= MAX_DATAPOINTS ? data.slice(data.length - MAX_DATAPOINTS, data.length + 1) : data
+      data = data.filter((v, i) => i < 1 ? true : data[i - 1].ts === v.ts)
+      min = data[data.length - Math.min(data.length, MAX_DATAPOINTS)].ts
+      // console.log('m', min)
+      return data.slice(MAX_DATAPOINTS * -1, data.length)
     })
     .catch(console.log)
 }
 
 function compileESData(data) {
   data = data.map(e => ({
-      "x": e.ts,
-      "y": parseFloat(e.value)
+      "x": e.ts - min,
+      "y": parseFloat(e.value) * 1000
     })
   )
   
@@ -46,7 +46,7 @@ function compileEmotionData(data) {
     let obj = JSON.parse(e.data).faceAttributes.emotion
     Object.keys(obj).forEach(key => {
       let n = {
-        "x": e.ts,
+        "x": e.ts - min,
         "y": obj[key]
       }
       if (!(key in emotions)) {
@@ -86,7 +86,7 @@ function App() {
 
   if (update) {
     update = false
-    setTimeout(function tick() {updateData(); setTimeout(tick, 3000)}, 3000)
+    setTimeout(function tick() {updateData(); setTimeout(tick, 5000)}, 5000)
   }
 
   return (
@@ -96,10 +96,10 @@ function App() {
             self
         </div>
         <div className="contain">
-            <ESGraph data={ESData}/>
+            <ESGraph data={ESData} legend={false}/>
         </div>
         <div className="contain">
-            <EmotionMultiGraph data={EmotionData}/>
+            <ESGraph data={EmotionData} legend={true}/>
         </div>
       </header>
     </div>
