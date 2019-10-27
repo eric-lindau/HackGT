@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+	"name": "Self by Auralytics",
+  	"permissions": ["storage", "tabs"],
+ 	"background": {
+	  	"scripts": ["background.js"],
+	    "persistent": true
+	},
+	"icons": {
+		"128": "images/get_started128.png"
+	 },
+	"version": "0.1",
+	"content_scripts": [
+		{
+	    	"matches": [
+	      		"<all_urls>"
+	    	],
+	    	"js": ["content.js"]
+	  	}
+	]
+}
