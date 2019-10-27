@@ -2,22 +2,31 @@ import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 
 const imageMap = {
-  'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png'
+  'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png',
+  'facebook': 'http://truckoutfittersllc.com/wp-content/uploads/2018/11/download-facebook-logo-png-18.png',
+  'instagram': 'http://pluspng.com/img-png/instagram-png-instagram-png-logo-1455.png',
+  // 'google': 'http://pluspng.com/img-png/google-logo-png-open-2000.png',
 }
 
-function swag(min) {
+function swag(min, activityMap) {
   return ({slice}) => {
     let x = Math.round(slice.points[0].x)
+    let t = (min + x) / 10
+    let fake = 15721503212
+    let im = []
+    if (fake in activityMap) {
+      im = activityMap[fake]
+    }
     return (
       <div>
-        {min + x}
-        <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap['google']}/>
+        {im.map(im => <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap[im]}/>)}
+        {/* <img style={{width: '2rem', height: '2rem', margin: 'auto'}} src={imageMap['google']}/> */}
       </div>
     )
   }
 }
 
-function ESGraph({data, legend, min}) {
+function ESGraph({data, legend, min, activityMap}) {
   return (
     <ResponsiveLine
         data={data}
@@ -53,10 +62,11 @@ function ESGraph({data, legend, min}) {
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
         pointLabel="y"
-        sliceTooltip={swag(min)}
+        sliceTooltip={swag(min, activityMap)}
         enableSlices={'x'}
         pointLabelYOffset={-12}
         useMesh={true}
+        curve={'natural'}
         legends={legend ? [
           {
               anchor: 'bottom-right',
