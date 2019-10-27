@@ -2,31 +2,40 @@ import React, { useState } from 'react';
 
 import './App.css';
 import ESGraph from './ESGraph';
-import EmotionMultiGraph from './EmotionMultiGraph';
+import logo from './logo.png';
 
 const DB_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readEScores'
-const MAX_DATAPOINTS = 35
+const AC_ENDPOINT = 'https://swagv1.azurewebsites.net/api/readMetadata'
+const MAX_DATAPOINTS = 20
+
+const urlMappings = ['google', 'facebook', 'instagram', 'youtube']
+
+let activityMap = {}
 
 let maxTimestamp = 0
 let update = true
+let min = 0
 
 async function getData(endpoint) {
   return fetch(`${endpoint}?pid=1&max_ts=${maxTimestamp}`)
     .then(data => data ? data.json() : [])
     .then(data => {
       data.sort((a, b) => a.ts - b.ts)
-      let min = data.length >= MAX_DATAPOINTS ?
-        data[data.length - MAX_DATAPOINTS].ts : (data.length > 0 ? data[0].ts : 0)
-      data.forEach(e => { e.ts -= min })
-
-      return data.length >= MAX_DATAPOINTS ? data.slice(data.length - MAX_DATAPOINTS, data.length + 1) : data
+      min = data[data.length - Math.min(data.length, MAX_DATAPOINTS)].ts
+      return data.slice(MAX_DATAPOINTS * -1, data.length)
     })
+    .catch(console.log)
+}
+
+async function getAcvitityData(endpoint) {
+  return fetch(`${endpoint}?pid=1&max_ts=${maxTimestamp}`)
+    .then(data => data ? data.json() : [])
     .catch(console.log)
 }
 
 function compileESData(data) {
   data = data.map(e => ({
-      "x": e.ts,
+      "x": Math.round((e.ts - min) / 100),
       "y": parseFloat(e.value)
     })
   )
@@ -46,7 +55,7 @@ function compileEmotionData(data) {
     let obj = JSON.parse(e.data).faceAttributes.emotion
     Object.keys(obj).forEach(key => {
       let n = {
-        "x": e.ts,
+        "x": Math.round((e.ts - min) / 100),
         "y": obj[key]
       }
       if (!(key in emotions)) {
@@ -58,7 +67,7 @@ function compileEmotionData(data) {
   })
   let res = []
   Object.keys(emotions).forEach(key => {
-    if (key in emotions && emotions[key].length > 0) {
+    if (key !== 'surprise' && key in emotions && emotions[key].length > 0) {
       res.push({
         "id": key,
         "data": emotions[key]
@@ -66,6 +75,15 @@ function compileEmotionData(data) {
     }
   })
   return res
+}
+
+function processActivity(site) {
+  for (let thing in urlMappings) {
+    if (site.toLowerCase().includes(urlMappings[thing])) {
+      return urlMappings[thing]
+    }
+  }
+  return false
 }
 
 function App() {
@@ -82,11 +100,25 @@ function App() {
       setESData(compiledES)
       setEmotionData(compiledEmotions)
     })
+
+    getAcvitityData(AC_ENDPOINT).then(newData => {
+      activityMap = {}
+      newData.forEach(el => {
+        let tsThresh = Math.round(el.ts / 1000)
+        let url = processActivity(el.site)
+        if (!(tsThresh in activityMap) && url) {
+          activityMap[tsThresh] = [url]
+        } else if (url) {
+          activityMap[tsThresh].push(url)
+        }
+      })
+    })
   }
 
   if (update) {
     update = false
-    setTimeout(function tick() {updateData(); setTimeout(tick, 3000)}, 3000)
+    updateData();
+    setTimeout(function tick() {updateData(); setTimeout(tick, 5000)}, 5000)
   }
 
   return (
@@ -94,12 +126,15 @@ function App() {
       <header className="App-header">
         <div className="App-logo">
             self
+            <img id="logo" src={logo} alt="Auralytics"></img>
         </div>
         <div className="contain">
-            <ESGraph data={ESData}/>
+            <div style={{fontSize: '1rem'}}>Calculated Emotion Score</div>
+            <ESGraph data={ESData} legend={false} min={min} activityMap={activityMap}/>
         </div>
         <div className="contain">
-            <EmotionMultiGraph data={EmotionData}/>
+            <div style={{fontSize: '1rem'}}>Individual Emotion Measures</div>
+            <ESGraph data={EmotionData} legend={true} min={min} activityMap={activityMap}/>
         </div>
       </header>
     </div>

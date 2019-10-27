@@ -5,19 +5,31 @@
   height: 100%;
 }
 
+#logo {
+  position: absolute;
+  /* right: 5;
+  left: 10; */
+  vertical-align: middle;
+  margin: auto;
+  padding-left: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .App-logo {
   color: #b3e2cd;
   position: absolute;
+  text-align: center;
   top: 2rem;
-  left: 5rem;
-  
+  left: 0;
+  width: 100%;
   font-size: 3rem;
   height: 1.1rem;
   font-family: 'Oxygen';
 }
 
 .App-header {
-  background-color: #2E282A;
+  background-color: #726e73;
   min-height: 100vh;
   width: 100%;
   display: flex;
